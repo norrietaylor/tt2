@@ -201,7 +201,7 @@ PlayerSettings:
   m_PlatformArchitecture: {}
   m_RenderingPath: {}
   m_MobileRenderingPath: {}
-  m_ActiveInputHandler: 0
+  m_ActiveInputHandler: 2
   m_ColorGamut: {}
   m_TargetPixelDensity: {}
   m_ResolutionScalingMode: {}
