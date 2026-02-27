@@ -24,6 +24,8 @@ namespace TaekwondoTech.Enemies.States
 
             if (_enemy.Animator != null)
             {
+                _enemy.Animator.SetBool("IsMoving", false);
+                _enemy.Animator.SetBool("IsChasing", false);
                 _enemy.Animator.SetTrigger("Stunned");
             }
         }

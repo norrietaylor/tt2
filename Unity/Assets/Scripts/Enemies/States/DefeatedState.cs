@@ -9,7 +9,6 @@ namespace TaekwondoTech.Enemies.States
     public class DefeatedState : IEnemyState
     {
         private readonly EnemyBase _enemy;
-        private float _deathTimer;
         private const float DEATH_DELAY = 1f;
 
         public DefeatedState(EnemyBase enemy)
@@ -20,7 +19,6 @@ namespace TaekwondoTech.Enemies.States
         public void Enter()
         {
             _enemy.StopMovement();
-            _deathTimer = 0f;
 
             // Disable collider
             if (_enemy.Collider != null)
@@ -36,16 +34,14 @@ namespace TaekwondoTech.Enemies.States
 
             // Hide alert indicator
             _enemy.ShowAlertIndicator(false);
+
+            // Schedule destruction independent of per-frame Execute() calls
+            Object.Destroy(_enemy.gameObject, DEATH_DELAY);
         }
 
         public void Execute()
         {
-            _deathTimer += Time.deltaTime;
-
-            if (_deathTimer >= DEATH_DELAY)
-            {
-                Object.Destroy(_enemy.gameObject);
-            }
+            // Destruction is scheduled in Enter() via Object.Destroy with delay
         }
 
         public void Exit()

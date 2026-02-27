@@ -27,6 +27,8 @@ namespace TaekwondoTech.Enemies.States
 
             if (_enemy.Animator != null)
             {
+                _enemy.Animator.SetBool("IsMoving", false);
+                _enemy.Animator.SetBool("IsChasing", false);
                 _enemy.Animator.SetTrigger("Attack");
             }
         }
@@ -56,6 +58,9 @@ namespace TaekwondoTech.Enemies.States
         private void DealDamageToPlayer()
         {
             if (_enemy.Player == null) return;
+
+            // Re-check distance before applying damage in case player moved out of range
+            if (_enemy.GetDistanceToPlayer() > _enemy.AttackRange) return;
 
             IDamageable playerDamageable = _enemy.Player.GetComponent<IDamageable>();
             if (playerDamageable != null && playerDamageable.IsAlive)

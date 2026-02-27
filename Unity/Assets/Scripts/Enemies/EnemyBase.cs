@@ -88,10 +88,7 @@ namespace TaekwondoTech.Enemies
 
         private void Update()
         {
-            if (IsAlive)
-            {
-                _stateMachine.Update();
-            }
+            _stateMachine.Update();
         }
 
         public void TakeDamage(int damage)
