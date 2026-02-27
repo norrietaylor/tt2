@@ -1,4 +1,4 @@
-# PRD: Taekwondo Robot Builder v2
+# PRD: Taekwondo Tech v2
 
 **Author:** Norrie Taylor
 **Date:** 2026-02-26
@@ -26,7 +26,7 @@
 
 ## Executive Summary
 
-Taekwondo Robot Builder v2 is a ground-up reimagining of a side-scrolling platformer where a young taekwondo martial artist collects robot parts to build the ultimate robot companion. Built in Unity (C#) targeting kids ages 6-12, v2 replaces the vanilla JS/Phaser prototype with a production-quality game featuring proper audio, hand-crafted sprite art, a narrative-driven progression system, and cross-platform deployment (WebGL, iOS, Android).
+Taekwondo Tech v2 is a ground-up reimagining of a side-scrolling platformer where a young taekwondo martial artist collects robot parts to build the ultimate robot companion. Built in Unity (C#) targeting kids ages 6-12, v2 replaces the vanilla JS/Phaser prototype with a production-quality game featuring proper audio, hand-crafted sprite art, a narrative-driven progression system, and cross-platform deployment (WebGL, iOS, Android).
 
 The v1 prototype validated core gameplay across 15+ PRs — combat, collection, 10 dragon costumes with unique elemental powers, a power-up queue system, banana bonus/survival modes, and a robot craft system. v2 takes ALL of these forward, reimagined with polished mechanics, a modular Unity codebase, and a kid-friendly experience.
 
@@ -1110,4 +1110,4 @@ Explicitly NOT included in v2 launch:
 
 **End of PRD**
 
-*This PRD is based on comprehensive analysis of the v1 Taekwondo Robot Builder codebase (15 PRs, 30+ commits), including all 10 dragon costumes with their exact elemental powers, Legendary Mode, both banana game modes with 5 food types, and the complete Monkey Titan enemy system. All v1 features are preserved and reimagined for Unity.*
+*This PRD is based on comprehensive analysis of the v1 Taekwondo Tech codebase (15 PRs, 30+ commits), including all 10 dragon costumes with their exact elemental powers, Legendary Mode, both banana game modes with 5 food types, and the complete Monkey Titan enemy system. All v1 features are preserved and reimagined for Unity.*
