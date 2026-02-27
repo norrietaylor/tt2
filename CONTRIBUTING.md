@@ -11,6 +11,7 @@ Thank you for your interest in contributing to the Taekwondo Tech v2 Unity proje
 3. [Coding Standards](#coding-standards)
 4. [Naming Conventions](#naming-conventions)
 5. [Pull Request Guidelines](#pull-request-guidelines)
+6. [CI/CD Pipeline](#cicd-pipeline)
 
 ---
 
@@ -93,3 +94,35 @@ All scripts must live under the `TaekwondoTech` namespace or a child namespace (
 5. **Tests:** Add or update Unity Test Runner tests for any new logic in `Assets/Scripts`.
 6. **No 500-line violations:** CI will flag scripts that exceed 500 lines — fix them before requesting review.
 7. **Review:** At least one approving review is required before merging.
+
+---
+
+## CI/CD Pipeline
+
+The workflow at `.github/workflows/unity-build.yml` runs automatically on:
+
+- Every push to `main`
+- Every pull request from branches **in this repository** (Unity builds require `UNITY_*` secrets)
+
+It builds the Unity project for **WebGL**, **iOS**, and **Android** targets in parallel, caches the `Library` folder between runs, and uploads each build as a downloadable artifact from the workflow run.
+
+> **Note:** GitHub Actions does not expose repository secrets (including `UNITY_LICENSE`, `UNITY_EMAIL`, and `UNITY_PASSWORD`) to workflows triggered from forks. As a result, forked pull requests cannot run the full Unity build jobs. For a full CI run, open a pull request from a branch in this repository or coordinate with a maintainer.
+
+### GitHub Secrets
+
+The Unity CI/CD pipeline requires the following secrets to be configured in the repository settings under **Settings → Secrets and variables → Actions**:
+
+| Secret | Description |
+|---|---|
+| `UNITY_LICENSE` | Unity license XML (exported from Unity Hub or the Unity activation workflow) |
+| `UNITY_EMAIL` | Email address associated with your Unity account |
+| `UNITY_PASSWORD` | Password for your Unity account |
+
+### Obtaining a Unity License XML
+
+1. Follow the [game-ci manual activation guide](https://game.ci/docs/github/activation) to generate a `.ulf` license file.
+2. Copy the full contents of the `.ulf` file and store it as the `UNITY_LICENSE` secret.
+
+### Unity Project Location
+
+The Unity project must be placed in the `Unity/` directory at the repository root (i.e. `Unity/Assets/`, `Unity/Packages/`, `Unity/ProjectSettings/`). The workflow uses `projectPath: Unity` when invoking `game-ci/unity-builder`.
