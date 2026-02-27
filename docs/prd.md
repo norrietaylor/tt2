@@ -1,9 +1,9 @@
 # PRD: Taekwondo Tech v2
 
 **Author:** Norrie Taylor
-**Date:** 2026-02-26
-**Status:** Draft
-**Version:** 1.0
+**Date:** 2026-02-27
+**Status:** Approved
+**Version:** 1.1
 
 ---
 
@@ -21,6 +21,7 @@
 10. [Open Questions & Risks](#open-questions--risks)
 11. [Validation Checkpoints](#validation-checkpoints)
 12. [Appendix: Task Breakdown Hints](#appendix-task-breakdown-hints)
+13. [Revision History](#revision-history)
 
 ---
 
@@ -1111,3 +1112,12 @@ Explicitly NOT included in v2 launch:
 **End of PRD**
 
 *This PRD is based on comprehensive analysis of the v1 Taekwondo Tech codebase (15 PRs, 30+ commits), including all 10 dragon costumes with their exact elemental powers, Legendary Mode, both banana game modes with 5 food types, and the complete Monkey Titan enemy system. All v1 features are preserved and reimagined for Unity.*
+
+---
+
+## Revision History
+
+| Version | Date | Author | Status | Summary |
+|---------|------|--------|--------|---------|
+| 1.0 | 2026-02-26 | Norrie Taylor | Draft | Initial PRD created covering all 8 user stories and full functional requirements |
+| 1.1 | 2026-02-27 | Norrie Taylor | Approved | Reviewed all user stories for completeness; confirmed all 6 core stories have specific, testable acceptance criteria; promoted status from Draft to Approved |
