@@ -2,7 +2,19 @@
 
 A ground-up Unity (C#) reimagining of the Taekwondo Robot Builder side-scrolling platformer — targeting kids ages 6–12 on WebGL, iOS, and Android.
 
-See the full product specification in [`docs/prd.md`](docs/prd.md).
+---
+
+## 📋 Product Requirements
+
+The full Product Requirements Document (PRD) is the source of truth for all features and design decisions.
+
+**[📄 View the PRD → docs/prd.md](docs/prd.md)**
+
+| Field | Value |
+|-------|-------|
+| Status | ✅ Approved |
+| Version | 1.1 |
+| Last Updated | 2026-02-27 |
 
 ---
 
