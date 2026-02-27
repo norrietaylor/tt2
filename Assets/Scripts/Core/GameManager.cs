@@ -10,6 +10,10 @@ namespace TaekwondoTech.Core
     {
         public static GameManager Instance { get; private set; }
 
+        [Tooltip("All RobotPartData assets in the project — used to register " +
+                 "known parts with SaveManager so inventory can be restored on load.")]
+        public RobotPartData[] allRobotParts;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -24,7 +28,19 @@ namespace TaekwondoTech.Core
 
         private void Start()
         {
-            // TODO: Initialize subsystems (AudioManager, SaveSystem, etc.)
+            // Register all known robot parts then restore saved inventory.
+            if (allRobotParts == null || allRobotParts.Length == 0)
+                Debug.LogWarning("GameManager: allRobotParts is empty — saved inventory cannot be restored. " +
+                                 "Assign all RobotPartData assets to this field in the Inspector.");
+            else
+                SaveManager.RegisterKnownParts(allRobotParts);
+
+            SaveManager.Load();
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveManager.Save();
         }
 
         /// <summary>
