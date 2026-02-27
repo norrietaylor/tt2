@@ -22,6 +22,12 @@ The Unity CI/CD pipeline requires the following secrets to be configured in the 
 The workflow at `.github/workflows/unity-build.yml` runs automatically on:
 
 - Every push to `main`
-- Every pull request
+- Every pull request from branches **in this repository** (Unity builds require `UNITY_*` secrets)
 
 It builds the Unity project for **WebGL**, **iOS**, and **Android** targets in parallel, caches the `Library` folder between runs, and uploads each build as a downloadable artifact from the workflow run.
+
+> **Note:** GitHub Actions does not expose repository secrets (including `UNITY_LICENSE`, `UNITY_EMAIL`, and `UNITY_PASSWORD`) to workflows triggered from forks. As a result, forked pull requests cannot run the full Unity build jobs. For a full CI run, open a pull request from a branch in this repository or coordinate with a maintainer.
+
+## Unity Project Location
+
+The Unity project must be placed in the `Unity/` directory at the repository root (i.e. `Unity/Assets/`, `Unity/Packages/`, `Unity/ProjectSettings/`). The workflow uses `projectPath: Unity` when invoking `game-ci/unity-builder`.
