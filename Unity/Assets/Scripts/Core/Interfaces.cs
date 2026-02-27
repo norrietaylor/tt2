@@ -27,8 +27,14 @@ namespace TaekwondoTech.Core
         /// Apply damage to this entity.
         /// </summary>
         /// <param name="damage">Amount of damage to apply.</param>
+        void TakeDamage(float damage);
+
+        /// <summary>
+        /// Apply damage to this entity from a specific source.
+        /// </summary>
+        /// <param name="damage">Amount of damage to apply.</param>
         /// <param name="damageSource">The GameObject that caused the damage (can be null).</param>
-        void TakeDamage(float damage, GameObject damageSource = null);
+        void TakeDamage(float damage, GameObject damageSource);
 
         /// <summary>
         /// Heal this entity.
@@ -50,15 +56,26 @@ namespace TaekwondoTech.Core
         void OnCollect(GameObject collector);
 
         /// <summary>
-        /// The type of collectible (e.g., "Coin", "RobotPart", "PowerUp").
+        /// The type of collectible.
         /// </summary>
-        string CollectibleType { get; }
+        CollectibleType CollectibleType { get; }
 
         /// <summary>
         /// Visual rarity indicator (Common, Rare, Epic).
         /// Used for robot parts and special collectibles.
         /// </summary>
         CollectibleRarity Rarity { get; }
+    }
+
+    /// <summary>
+    /// Types of collectibles in the game.
+    /// </summary>
+    public enum CollectibleType
+    {
+        Coin,
+        RobotPart,
+        PowerUp,
+        CostumeItem
     }
 
     /// <summary>
@@ -69,8 +86,7 @@ namespace TaekwondoTech.Core
     {
         Common,
         Rare,
-        Epic,
-        Legendary
+        Epic
     }
 
     /// <summary>
@@ -104,9 +120,9 @@ namespace TaekwondoTech.Core
     public interface IPowerUp
     {
         /// <summary>
-        /// The type of power-up (e.g., "SpeedBoost", "Shield", "Invincibility").
+        /// The type of power-up.
         /// </summary>
-        string PowerUpType { get; }
+        PowerUpType PowerUpType { get; }
 
         /// <summary>
         /// Duration of the power-up effect in seconds.
@@ -129,5 +145,16 @@ namespace TaekwondoTech.Core
         /// Whether this power-up is currently active.
         /// </summary>
         bool IsActive { get; }
+    }
+
+    /// <summary>
+    /// Types of power-ups from REQ-007.
+    /// </summary>
+    public enum PowerUpType
+    {
+        SpeedBoost,
+        Shield,
+        ElementalAttack,
+        Invincibility
     }
 }
