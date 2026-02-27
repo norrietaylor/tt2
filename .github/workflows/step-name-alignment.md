@@ -13,7 +13,7 @@ permissions:
   pull-requests: read
 
 engine:
-  id: claude
+  id: copilot
 
 network:
   allowed:

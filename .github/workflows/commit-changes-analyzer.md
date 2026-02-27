@@ -13,8 +13,7 @@ permissions:
   issues: read
   pull-requests: read
 engine:
-  id: claude
-  max-turns: 100
+  id: copilot
 tools:
   github:
     toolsets: [default]
