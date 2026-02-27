@@ -13,7 +13,6 @@ permissions:
 tracker-id: code-simplifier
 
 imports:
-  - shared/mood.md
   - shared/reporting.md
 
 safe-outputs:
@@ -23,14 +22,17 @@ safe-outputs:
     reviewers: [copilot]
     expires: 1d
 
+network:
+  allowed:
+    - go
+
 tools:
   github:
     toolsets: [default]
 
 timeout-minutes: 30
 strict: true
-source: github/gh-aw/.github/workflows/code-simplifier.md@852cb06ad52958b402ed982b69957ffc57ca0619
-engine: copilot
+source: github/gh-aw/.github/workflows/code-simplifier.md@f19b6f91dfc7dd02687de50d53b3355cc4f64a63
 ---
 
 <!-- This prompt will be imported in the agentic workflow .github/workflows/code-simplifier.md at runtime. -->
@@ -397,3 +399,9 @@ Your output MUST either:
 3. **If simplifications made**: Create a PR with the changes using safe-outputs
 
 Begin your code simplification analysis now. Find recently modified code, assess simplification opportunities, apply improvements while preserving functionality, validate changes, and create a PR if beneficial.
+
+**Important**: If no action is needed after completing your analysis, you **MUST** call the `noop` safe-output tool with a brief explanation. Failing to call any safe-output tool is the most common cause of safe-output workflow failures.
+
+```json
+{"noop": {"message": "No action needed: [brief explanation of what was analyzed and why]"}}
+```
