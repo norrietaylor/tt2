@@ -56,7 +56,7 @@ Assets/
 
 > **No single C# script file may exceed 500 lines.**
 
-If a file approaches this limit, extract responsibilities into a new class or leverage ScriptableObjects. This rule exists to keep each file focused and reviewable. A linting note is captured in `.editorconfig`.
+If a file approaches this limit, extract responsibilities into a new class or leverage ScriptableObjects. This rule exists to keep each file focused and reviewable. This guideline is enforced through CI checks and code review rather than EditorConfig settings.
 
 ### Formatting
 

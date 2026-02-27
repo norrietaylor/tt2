@@ -32,6 +32,18 @@ namespace TaekwondoTech.Core
         /// </summary>
         public void LoadScene(string sceneName)
         {
+            if (string.IsNullOrEmpty(sceneName))
+            {
+                Debug.LogError("GameManager.LoadScene: sceneName is null or empty.");
+                return;
+            }
+
+            if (UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath(sceneName) < 0)
+            {
+                Debug.LogError($"GameManager.LoadScene: scene '{sceneName}' is not in the build settings.");
+                return;
+            }
+
             // TODO: Add loading screen / transition logic
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
