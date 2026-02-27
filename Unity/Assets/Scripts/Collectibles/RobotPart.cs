@@ -16,7 +16,9 @@ namespace TaekwondoTech.Collectibles
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.IncrementRobotParts();
+#if UNITY_EDITOR
                 Debug.Log($"Collected {_partName}! Total parts: {GameManager.Instance.RobotPartsCollected}");
+#endif
             }
         }
     }

@@ -23,6 +23,13 @@ namespace TaekwondoTech.Player
         public int MaxHealth => _maxHealth;
         public bool IsAlive => _currentHealth > 0;
 
+        // Explicit IDamageable interface implementations
+        float IDamageable.Health => _currentHealth;
+        float IDamageable.MaxHealth => _maxHealth;
+        void IDamageable.TakeDamage(float damage) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.TakeDamage(float damage, GameObject damageSource) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.Heal(float amount) => Heal(Mathf.RoundToInt(amount));
+
         private void Awake()
         {
             _currentHealth = _maxHealth;

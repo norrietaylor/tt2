@@ -62,7 +62,11 @@ namespace TaekwondoTech.Collectibles
         {
             if (_collectEffect != null)
             {
-                Instantiate(_collectEffect, transform.position, Quaternion.identity);
+                ParticleSystem effectInstance = Instantiate(_collectEffect, transform.position, Quaternion.identity);
+                ParticleSystem.MainModule mainModule = effectInstance.main;
+                float maxLifetime = mainModule.startLifetime.constantMax;
+                float destroyDelay = mainModule.duration + maxLifetime;
+                Destroy(effectInstance.gameObject, destroyDelay);
             }
 
             if (_collectSound != null && Camera.main != null)

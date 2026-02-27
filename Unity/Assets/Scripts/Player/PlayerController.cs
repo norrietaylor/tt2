@@ -21,11 +21,10 @@ namespace TaekwondoTech.Player
         private Rigidbody2D _rigidbody;
         private float _moveInput;
         private bool _isGrounded;
-        private bool _isJumping;
 
         public float Speed => Mathf.Abs(_rigidbody.velocity.x);
         public bool IsGrounded => _isGrounded;
-        public bool IsJumping => _isJumping;
+        public bool IsJumping => !_isGrounded && _rigidbody.velocity.y > 0.1f;
         public bool IsFalling => !_isGrounded && _rigidbody.velocity.y < -0.1f;
 
         private void Awake()
@@ -71,7 +70,6 @@ namespace TaekwondoTech.Player
         private void Jump()
         {
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
-            _isJumping = true;
         }
 
         private void CheckGroundStatus()
@@ -82,17 +80,11 @@ namespace TaekwondoTech.Player
                 return;
             }
 
-            bool wasGrounded = _isGrounded;
             _isGrounded = Physics2D.OverlapCircle(
                 _groundCheck.position,
                 _groundCheckRadius,
                 _groundLayer
             );
-
-            if (_isGrounded && !wasGrounded)
-            {
-                _isJumping = false;
-            }
         }
 
         private void OnDrawGizmosSelected()
