@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -100,7 +101,7 @@ namespace TaekwondoTech.Levels
             _currentState = LevelState.GameOver;
             Debug.Log("LevelManager: Player defeated. Reloading scene...");
 
-            Invoke(nameof(ReloadScene), 2f);
+            StartCoroutine(ReloadSceneAfterDelay(2f));
         }
 
         /// <summary>
@@ -118,11 +119,9 @@ namespace TaekwondoTech.Levels
             Debug.Log("LevelManager: Level completed!");
         }
 
-        /// <summary>
-        /// Reloads the current scene.
-        /// </summary>
-        private void ReloadScene()
+        private IEnumerator ReloadSceneAfterDelay(float delay)
         {
+            yield return new WaitForSecondsRealtime(delay);
             Time.timeScale = 1f;
             SceneManager.LoadScene(_currentLevelName);
         }

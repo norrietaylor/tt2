@@ -39,9 +39,7 @@ namespace TaekwondoTech.Levels
             }
 
             Vector3 deltaMovement = _cameraTransform.position - _lastCameraPosition;
-            transform.position += new Vector3(deltaMovement.x * _parallaxEffectMultiplier,
-                                             deltaMovement.y * _parallaxEffectMultiplier,
-                                             0f);
+            transform.position += new Vector3(deltaMovement.x, deltaMovement.y, 0f) * _parallaxEffectMultiplier;
 
             _lastCameraPosition = _cameraTransform.position;
 
