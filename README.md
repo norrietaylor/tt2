@@ -39,14 +39,15 @@ The full Product Requirements Document (PRD) is the source of truth for all feat
 ```
 Assets/
   Scripts/
-    Core/          # GameManager, SceneLoader, etc.
+    Core/          # GameManager, SceneLoader, Interfaces (IDamageable, ICollectible, IInteractable, IPowerUp)
     Player/        # PlayerController, PlayerCombat
     Enemies/
     UI/
     Collectibles/
     Costumes/
     PowerUps/
-    Levels/
+    Levels/        # LevelManager, CameraFollower, ParallaxBackground
+    Input/
     Persistence/
   Prefabs/
   Scenes/          # MainMenu.unity and future levels
