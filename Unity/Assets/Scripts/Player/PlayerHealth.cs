@@ -45,8 +45,7 @@ namespace TaekwondoTech.Player
             if (!IsAlive || damage <= 0)
                 return;
 
-            _currentHealth -= damage;
-            _currentHealth = Mathf.Max(_currentHealth, 0);
+            _currentHealth = Mathf.Clamp(_currentHealth - damage, 0, _maxHealth);
 
             OnHealthChanged?.Invoke(_currentHealth);
             OnPlayerDamaged?.Invoke();
@@ -62,8 +61,7 @@ namespace TaekwondoTech.Player
             if (!IsAlive || amount <= 0)
                 return;
 
-            _currentHealth += amount;
-            _currentHealth = Mathf.Min(_currentHealth, _maxHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
 
             OnHealthChanged?.Invoke(_currentHealth);
         }

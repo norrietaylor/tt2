@@ -8,14 +8,25 @@ namespace TaekwondoTech.Player
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
+        public enum AttackKind
+        {
+            None = 0,
+            Punch = 1,
+            Kick = 2,
+            Stomp = 3
+        }
+
         [Header("Combat Settings")]
         [SerializeField] private float _attackCooldown = 0.5f;
 
         private float _lastAttackTime;
-        private int _attackType; // 0=none, 1=punch, 2=kick, 3=stomp
+        private AttackKind _attackKind;
 
-        public int AttackType => _attackType;
-        public bool IsAttacking => _attackType != 0;
+        /// <summary>
+        /// Current attack type as an integer for the Animator parameter.
+        /// </summary>
+        public int AttackType => (int)_attackKind;
+        public bool IsAttacking => _attackKind != AttackKind.None;
 
         private void Update()
         {
@@ -30,29 +41,29 @@ namespace TaekwondoTech.Player
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                PerformAttack(1); // Punch
+                PerformAttack(AttackKind.Punch);
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
-                PerformAttack(2); // Kick
+                PerformAttack(AttackKind.Kick);
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                PerformAttack(3); // Stomp
+                PerformAttack(AttackKind.Stomp);
             }
         }
 
-        private void PerformAttack(int attackType)
+        private void PerformAttack(AttackKind kind)
         {
-            _attackType = attackType;
+            _attackKind = kind;
             _lastAttackTime = Time.time;
         }
 
         private void UpdateAttackState()
         {
-            if (_attackType != 0 && Time.time - _lastAttackTime >= _attackCooldown)
+            if (_attackKind != AttackKind.None && Time.time - _lastAttackTime >= _attackCooldown)
             {
-                _attackType = 0;
+                _attackKind = AttackKind.None;
             }
         }
     }

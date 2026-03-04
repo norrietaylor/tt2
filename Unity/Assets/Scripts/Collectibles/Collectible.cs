@@ -20,6 +20,7 @@ namespace TaekwondoTech.Collectibles
         [Header("Events")]
         public UnityEvent OnCollected;
 
+        private const string PlayerTag = "Player";
         private bool _isCollected;
 
         protected virtual void Awake()
@@ -33,7 +34,7 @@ namespace TaekwondoTech.Collectibles
             if (_isCollected)
                 return;
 
-            if (other.CompareTag("Player"))
+            if (other.CompareTag(PlayerTag))
             {
                 Collect();
             }
