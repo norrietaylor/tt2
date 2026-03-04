@@ -1,0 +1,9 @@
+{
+  "name": "tt2-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No documentation site configured'",
+    "preview": "echo 'No documentation site to preview' && exit 1"
+  }
+}
