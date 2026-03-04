@@ -37,9 +37,10 @@ namespace TaekwondoTech.Player
         [SerializeField] private bool _showDebugGizmos = true;
 
         private bool _canPunch = true;
+        private Collider2D _collider;
         private Coroutine _punchCooldownCoroutine;
         private Coroutine _attackTypeResetCoroutine;
-        private int _attackType = 0; // 0=none, 1=punch, 2=kick, 3=stomp
+        private int _attackType = 0;
         private readonly Collider2D[] _hitBuffer = new Collider2D[MAX_HIT_BUFFER_SIZE];
 
         /// <summary>Current attack type: 0=none, 1=punch, 2=kick, 3=stomp.</summary>
@@ -55,20 +56,7 @@ namespace TaekwondoTech.Player
                 _rigidbody2D = GetComponent<Rigidbody2D>();
             }
 
-            if (OnPunchPerformed == null)
-            {
-                OnPunchPerformed = new UnityEvent();
-            }
-
-            if (OnKickPerformed == null)
-            {
-                OnKickPerformed = new UnityEvent();
-            }
-
-            if (OnStompPerformed == null)
-            {
-                OnStompPerformed = new UnityEvent();
-            }
+            _collider = GetComponent<Collider2D>();
         }
 
         private void Start()
@@ -142,7 +130,7 @@ namespace TaekwondoTech.Player
                 Vector2 enemyTop = enemy.bounds.center;
                 enemyTop.y = enemy.bounds.max.y;
 
-                float playerBottom = GetComponent<Collider2D>()?.bounds.min.y ?? transform.position.y;
+                float playerBottom = _collider != null ? _collider.bounds.min.y : transform.position.y;
 
                 if (playerBottom >= enemyTop.y - STOMP_CHECK_HEIGHT)
                 {

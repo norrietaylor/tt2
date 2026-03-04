@@ -30,21 +30,6 @@ namespace TaekwondoTech.Core
             }
 
             Instance = this;
-
-            if (OnPunchInput == null)
-            {
-                OnPunchInput = new UnityEvent();
-            }
-
-            if (OnKickInput == null)
-            {
-                OnKickInput = new UnityEvent();
-            }
-
-            if (OnJumpInput == null)
-            {
-                OnJumpInput = new UnityEvent();
-            }
         }
 
         private void Update()
