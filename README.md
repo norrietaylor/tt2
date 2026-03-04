@@ -39,25 +39,41 @@ The full Product Requirements Document (PRD) is the source of truth for all feat
 ```
 Assets/
   Scripts/
-    Core/          # GameManager, SceneLoader, etc.
-    Player/        # PlayerController, PlayerCombat
+    Core/          # GameManager, InputManager, ScoreManager, Interfaces (IDamageable)
+    Player/        # PlayerController, PlayerCombat, PlayerHealth, PlayerAnimator
     Enemies/
-    UI/
-    Collectibles/
+    UI/            # HUDController
+    Collectibles/  # Collectible (base), Coin, RobotPart
     Costumes/
     PowerUps/
-    Levels/
+    Levels/        # LevelManager, CameraFollower, ParallaxBackground
     Persistence/
   Prefabs/
   Scenes/          # MainMenu.unity and future levels
   Art/
     Sprites/
-    Animations/
+    Animations/    # PlayerAnimator.controller
   Audio/
     SFX/
     Music/
   ScriptableObjects/
 ```
+
+---
+
+## Implemented Systems
+
+| System | Scripts | Description |
+|--------|---------|-------------|
+| Player Movement | `PlayerController` | 2D platformer movement, jumping, grounding |
+| Player Combat | `PlayerCombat` | Punch (≈1 unit), kick (≈1.5 units), head stomp with bounce |
+| Player Health | `PlayerHealth` | 3-hit system with 1 s invincibility frames and sprite flash |
+| Player Animation | `PlayerAnimator` | Drives Animator parameters from controller/combat state |
+| Collectibles | `Collectible`, `Coin`, `RobotPart` | Trigger-based pickup with visual effect; coins update score |
+| Score | `ScoreManager` | Singleton; `AddScore(int)` raises `OnScoreChanged(int)` |
+| HUD | `HUDController` | Health hearts and score display via TMP_Text |
+| Input | `InputManager` | Centralised input event broker |
+| Levels | `LevelManager`, `CameraFollower`, `ParallaxBackground` | Scene flow and camera tracking |
 
 ---
 

@@ -29,20 +29,20 @@ Thank you for your interest in contributing to the Taekwondo Tech v2 Unity proje
 ```
 Assets/
   Scripts/
-    Core/          # GameManager, SceneLoader, etc.
-    Player/        # PlayerController, PlayerCombat
+    Core/          # GameManager, InputManager, ScoreManager, Interfaces (IDamageable)
+    Player/        # PlayerController, PlayerCombat, PlayerHealth, PlayerAnimator
     Enemies/
-    UI/
-    Collectibles/
+    UI/            # HUDController
+    Collectibles/  # Collectible (base), Coin, RobotPart
     Costumes/
     PowerUps/
-    Levels/
+    Levels/        # LevelManager, CameraFollower, ParallaxBackground
     Persistence/   # SaveSystem, PlayerPrefsHelper
   Prefabs/
   Scenes/
   Art/
     Sprites/
-    Animations/
+    Animations/    # PlayerAnimator.controller
   Audio/
     SFX/
     Music/
