@@ -11,6 +11,14 @@ namespace TaekwondoTech.Player
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
+        public enum AttackKind
+        {
+            None = 0,
+            Punch = 1,
+            Kick = 2,
+            Stomp = 3
+        }
+
         private const float PUNCH_RANGE = 1f;
         private const float KICK_RANGE = 1.5f;
         private const float PUNCH_COOLDOWN = 0.3f;
@@ -39,14 +47,14 @@ namespace TaekwondoTech.Player
         private bool _canPunch = true;
         private Coroutine _punchCooldownCoroutine;
         private Coroutine _attackTypeResetCoroutine;
-        private int _attackType = 0; // 0=none, 1=punch, 2=kick, 3=stomp
+        private AttackKind _attackType = AttackKind.None;
         private readonly Collider2D[] _hitBuffer = new Collider2D[MAX_HIT_BUFFER_SIZE];
 
-        /// <summary>Current attack type: 0=none, 1=punch, 2=kick, 3=stomp.</summary>
-        public int AttackType => _attackType;
+        /// <summary>Current attack type.</summary>
+        public AttackKind AttackType => _attackType;
 
         /// <summary>Whether the player is currently performing an attack.</summary>
-        public bool IsAttacking => _attackType != 0;
+        public bool IsAttacking => _attackType != AttackKind.None;
 
         private void Awake()
         {
@@ -108,7 +116,7 @@ namespace TaekwondoTech.Player
             Vector2 attackPosition = GetAttackPosition(PUNCH_RANGE);
             PerformAttack(attackPosition, _hitboxSize, _punchDamage);
 
-            SetAttackType(1);
+            SetAttackType(AttackKind.Punch);
             OnPunchPerformed?.Invoke();
             StartPunchCooldown();
         }
@@ -121,7 +129,7 @@ namespace TaekwondoTech.Player
             Vector2 attackPosition = GetAttackPosition(KICK_RANGE);
             PerformAttack(attackPosition, _hitboxSize, _kickDamage);
 
-            SetAttackType(2);
+            SetAttackType(AttackKind.Kick);
             OnKickPerformed?.Invoke();
         }
 
@@ -151,7 +159,7 @@ namespace TaekwondoTech.Player
                     {
                         damageable.TakeDamage((float)_stompDamage);
                         ApplyStompBounce();
-                        SetAttackType(3);
+                        SetAttackType(AttackKind.Stomp);
                         OnStompPerformed?.Invoke();
                     }
                 }
@@ -184,7 +192,7 @@ namespace TaekwondoTech.Player
         /// <summary>
         /// Set the current attack type and schedule a reset after display duration.
         /// </summary>
-        private void SetAttackType(int type)
+        private void SetAttackType(AttackKind type)
         {
             _attackType = type;
 
@@ -202,7 +210,7 @@ namespace TaekwondoTech.Player
         private IEnumerator ResetAttackTypeAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
-            _attackType = 0;
+            _attackType = AttackKind.None;
             _attackTypeResetCoroutine = null;
         }
 

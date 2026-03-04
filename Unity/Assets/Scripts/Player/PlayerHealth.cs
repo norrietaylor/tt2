@@ -73,7 +73,7 @@ namespace TaekwondoTech.Player
             }
 
             _currentHealth -= amount;
-            _currentHealth = Mathf.Max(0, _currentHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, MAX_HEALTH);
 
             OnHealthChanged?.Invoke(_currentHealth);
             OnPlayerDamaged?.Invoke();
