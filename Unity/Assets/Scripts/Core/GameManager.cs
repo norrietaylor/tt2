@@ -10,6 +10,10 @@ namespace TaekwondoTech.Core
     {
         public static GameManager Instance { get; private set; }
 
+        private int _robotPartsCollected;
+
+        public int RobotPartsCollected => _robotPartsCollected;
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -58,6 +62,14 @@ namespace TaekwondoTech.Core
 #else
             Application.Quit();
 #endif
+        }
+
+        /// <summary>
+        /// Increment the robot parts collected counter.
+        /// </summary>
+        public void IncrementRobotParts()
+        {
+            _robotPartsCollected++;
         }
     }
 }
