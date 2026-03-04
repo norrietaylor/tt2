@@ -56,6 +56,13 @@ namespace TaekwondoTech.Enemies
 
         public bool IsAlive => _currentHealth > 0;
 
+        // IDamageable explicit interface implementations
+        float IDamageable.Health => _currentHealth;
+        float IDamageable.MaxHealth => _maxHealth;
+        void IDamageable.TakeDamage(float damage) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.TakeDamage(float damage, GameObject damageSource) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.Heal(float amount) { /* Enemies do not heal by default */ }
+
         private void Awake()
         {
             _currentHealth = _maxHealth;
