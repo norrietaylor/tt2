@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using TaekwondoTech.Core;
 
 namespace TaekwondoTech.Player
 {
     /// <summary>
     /// PlayerHealth manages the player's 3-hit health system with invincibility frames.
     /// Handles damage taking, invincibility flashing, and defeat state.
+    /// Implements IDamageable for integration with combat systems.
     /// </summary>
-    public class PlayerHealth : MonoBehaviour
+    public class PlayerHealth : MonoBehaviour, IDamageable
     {
         private const int MAX_HEALTH = 3;
         private const float INVINCIBILITY_DURATION = 1f;
@@ -21,16 +23,25 @@ namespace TaekwondoTech.Player
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
         [Header("Events")]
-        public UnityEvent<int> OnPlayerDamaged;
-        public UnityEvent OnPlayerDefeated;
+        public UnityEvent<int> OnHealthChanged;
+        public UnityEvent OnPlayerDamaged;
+        public UnityEvent OnPlayerDeath;
 
         private bool _isInvincible = false;
         private bool _isDefeated = false;
         private Coroutine _invincibilityCoroutine;
 
         public int CurrentHealth => _currentHealth;
+        public int MaxHealth => MAX_HEALTH;
+        public bool IsAlive => _currentHealth > 0 && !_isDefeated;
         public bool IsInvincible => _isInvincible;
-        public bool IsDefeated => _isDefeated;
+
+        // IDamageable explicit interface implementations
+        float IDamageable.Health => _currentHealth;
+        float IDamageable.MaxHealth => MAX_HEALTH;
+        void IDamageable.TakeDamage(float damage) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.TakeDamage(float damage, GameObject damageSource) => TakeDamage(Mathf.RoundToInt(damage));
+        void IDamageable.Heal(float amount) => Heal(Mathf.RoundToInt(amount));
 
         private void Awake()
         {
@@ -42,21 +53,12 @@ namespace TaekwondoTech.Player
                     _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
                 }
             }
-
-            if (OnPlayerDamaged == null)
-            {
-                OnPlayerDamaged = new UnityEvent<int>();
-            }
-
-            if (OnPlayerDefeated == null)
-            {
-                OnPlayerDefeated = new UnityEvent();
-            }
         }
 
         private void Start()
         {
-            _currentHealth = MAX_HEALTH;
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, MAX_HEALTH);
+            OnHealthChanged?.Invoke(_currentHealth);
         }
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace TaekwondoTech.Player
         /// <param name="amount">Amount of damage to take.</param>
         public void TakeDamage(int amount)
         {
-            if (_isInvincible || _isDefeated)
+            if (_isInvincible || _isDefeated || amount <= 0)
             {
                 return;
             }
@@ -73,7 +75,8 @@ namespace TaekwondoTech.Player
             _currentHealth -= amount;
             _currentHealth = Mathf.Max(0, _currentHealth);
 
-            OnPlayerDamaged?.Invoke(_currentHealth);
+            OnHealthChanged?.Invoke(_currentHealth);
+            OnPlayerDamaged?.Invoke();
 
             if (_currentHealth <= 0)
             {
@@ -83,6 +86,19 @@ namespace TaekwondoTech.Player
             {
                 StartInvincibility();
             }
+        }
+
+        /// <summary>
+        /// Heal the player by the specified amount.
+        /// </summary>
+        /// <param name="amount">Amount to heal.</param>
+        public void Heal(int amount)
+        {
+            if (_isDefeated || amount <= 0)
+                return;
+
+            _currentHealth = Mathf.Min(_currentHealth + amount, MAX_HEALTH);
+            OnHealthChanged?.Invoke(_currentHealth);
         }
 
         /// <summary>
@@ -99,7 +115,7 @@ namespace TaekwondoTech.Player
         }
 
         /// <summary>
-        /// Coroutine to handle invincibility frames with sprite flashing.
+        /// Coroutine to handle invincibility frames with sprite flashing at 10 Hz.
         /// </summary>
         private IEnumerator InvincibilityCoroutine()
         {
@@ -128,7 +144,7 @@ namespace TaekwondoTech.Player
         }
 
         /// <summary>
-        /// Handle player defeat.
+        /// Handle player defeat state.
         /// </summary>
         private void HandleDefeat()
         {
@@ -150,7 +166,7 @@ namespace TaekwondoTech.Player
                 _spriteRenderer.enabled = true;
             }
 
-            OnPlayerDefeated?.Invoke();
+            OnPlayerDeath?.Invoke();
         }
 
         /// <summary>
@@ -172,6 +188,8 @@ namespace TaekwondoTech.Player
             {
                 _spriteRenderer.enabled = true;
             }
+
+            OnHealthChanged?.Invoke(_currentHealth);
         }
     }
 }
