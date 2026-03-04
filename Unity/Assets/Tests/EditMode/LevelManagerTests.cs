@@ -26,6 +26,12 @@ namespace Tests.EditMode
         [TearDown]
         public void TearDown()
         {
+            // Cancel any pending Invoke calls (e.g., ReloadScene from OnPlayerDefeated)
+            // to avoid nondeterministic side effects after the assertion.
+            if (_levelManager != null)
+            {
+                _levelManager.CancelInvoke();
+            }
             // Reset Time.timeScale in case any test left it at 0.
             Time.timeScale = 1f;
             Object.DestroyImmediate(_gameObject);
