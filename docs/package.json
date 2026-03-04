@@ -1,0 +1,9 @@
+{
+  "name": "tt2-slides",
+  "version": "1.0.0",
+  "description": "Taekwondo Tech v2 presentation slides using Marp",
+  "private": true,
+  "scripts": {
+    "build": "npx @marp-team/marp-cli slides/index.md --html --allow-local-files -o build/slides.html"
+  }
+}
