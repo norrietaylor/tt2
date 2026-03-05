@@ -53,7 +53,7 @@ A `Transform` reference used by `PatrolState` to define the two endpoints of an 
 
 ### ICollectible
 
-Interface for collectible items. Requires `OnCollect(GameObject)`, a `CollectibleType` property, and a `CollectibleRarity` property. Implemented by `Coin`, `RobotPart`, and other pickup types.
+Interface for collectible items. Requires `OnCollect(GameObject)`, a `CollectibleType` property, and a `Rarity` property of type `CollectibleRarity`.
 
 ### IDamageable
 
