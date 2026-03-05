@@ -231,16 +231,40 @@ Based on your analysis, categorize problems:
 - **Optimization opportunities** - Names that could be more concise
 - **Clarity enhancements** - Names that could be more descriptive
 
-### 6. Check Against Previous Suggestions
+### 6. Check for Existing Open Issues (Idempotency Guard)
 
-Before creating new issues:
+**Before creating any issue**, use the GitHub issues API to search for existing open issues with the `step-naming` label in this repository. Use the current repository owner and name (available from your GitHub context as `${{ github.repository }}`):
+
+```
+Search query: label:step-naming state:open repo:<owner>/<repo-name>
+```
+
+For example, if running in `acme-org/myrepo`, query `label:step-naming state:open repo:acme-org/myrepo`.
+
+**If any open `step-naming` issues are found:**
+- Record the existing issue numbers in your cache memory
+- Do **NOT** create a new issue — this run is a duplicate
+- Call the `noop` safe-output with a message like:
+  ```json
+  {"noop": {"message": "Skipped issue creation: found existing open step-naming issues (#X, #Y). Analysis complete — new findings will be addressed when existing issues are resolved."}}
+  ```
+- Exit gracefully
+
+**Only proceed to step 7 if zero open `step-naming` issues exist.**
+
+This guard is the primary deduplication mechanism. Cache memory alone is insufficient because it may be cleared or stale across runs.
+
+### 6b. Check Against Previous Suggestions
+
+If no open issues were found in step 6, additionally:
 
 1. **Review cache memory** to see if you've already flagged similar issues
-2. **Avoid duplicate issues** - Don't create a new issue if one already exists
-3. **Check for patterns** - If you've established a naming pattern, apply it consistently
-4. **Update your cache** with new findings
+2. **Check for patterns** - If you've established a naming pattern, apply it consistently
+3. **Update your cache** with new findings
 
 ### 7. Create Issues for Problems Found
+
+> **Prerequisite**: Only reach this step if step 6 confirmed that zero open `step-naming` issues exist in the repository. If any were found in step 6, you must call `noop` and stop.
 
 When you identify problems worth addressing, create issues using safe-outputs.
 
@@ -435,7 +459,8 @@ After completing your analysis, provide a brief summary:
 
 - **Source vs Compiled**: Step names come from `.md` source files and appear in `.lock.yml` compiled files. Issues should reference both.
 - **Glossary is authoritative**: When in doubt, defer to the official glossary
-- **Cache prevents duplicates**: Always check cache before creating issues
+- **Idempotency guard is mandatory**: Always search GitHub for open `step-naming` issues before creating a new one — this is the primary deduplication check (see step 6)
+- **Cache supplements, not replaces, the live check**: Cache memory may be stale; the GitHub search in step 6 is the authoritative check
 - **Patterns matter**: Consistency is as important as correctness
 - **Context is key**: A step name that seems wrong might make sense in context
 - **Test carefully**: Verify your suggestions don't break workflows
