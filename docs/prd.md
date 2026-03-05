@@ -1121,3 +1121,4 @@ Explicitly NOT included in v2 launch:
 |---------|------|--------|--------|---------|
 | 1.0 | 2026-02-26 | Norrie Taylor | Draft | Initial PRD created covering all 8 user stories and full functional requirements |
 | 1.1 | 2026-02-27 | Norrie Taylor | Approved | Reviewed all user stories for completeness; confirmed all 6 core stories have specific, testable acceptance criteria; promoted status from Draft to Approved |
+| 1.2 | 2026-03-04 | Norrie Taylor | In Progress | Phase 1, Task 7 complete: Base enemy AI state machine implemented (EnemyBase, EnemyStateMachine, IEnemyState, IdleState, PatrolState, ChaseState, AttackState, StunnedState, DefeatedState). Closes #57. See PR #64. |

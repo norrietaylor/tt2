@@ -39,14 +39,24 @@ The full Product Requirements Document (PRD) is the source of truth for all feat
 ```
 Assets/
   Scripts/
-    Core/          # GameManager, SceneLoader, etc.
-    Player/        # PlayerController, PlayerCombat
-    Enemies/
-    UI/
-    Collectibles/
+    Core/                    # GameManager, InputManager, ScoreManager, Interfaces
+    Player/                  # PlayerController, PlayerCombat, PlayerHealth, PlayerAnimator
+    Enemies/                 # Base enemy AI with state machine
+      EnemyBase.cs           # MonoBehaviour, implements IDamageable, drives state transitions
+      EnemyStateMachine.cs   # Generic state machine (ChangeState<T>)
+      IEnemyState.cs         # Interface: Enter(), Execute(), Exit()
+      States/
+        IdleState.cs         # Stands still 1-3 s, transitions to Patrol
+        PatrolState.cs       # Moves between waypoints, transitions to Chase
+        ChaseState.cs        # Follows player, red ! indicator on enter
+        AttackState.cs       # Applies IDamageable damage, returns to Chase
+        StunnedState.cs      # 0.5 s stun on hit, returns to Chase
+        DefeatedState.cs     # Defeat animation, destroys GameObject after 1 s
+    UI/                      # HUDController
+    Collectibles/            # Collectible, Coin, RobotPart
     Costumes/
     PowerUps/
-    Levels/
+    Levels/                  # LevelManager, CameraFollower, ParallaxBackground
     Persistence/
   Prefabs/
   Scenes/          # MainMenu.unity and future levels
