@@ -14,6 +14,25 @@ tools:
   cache-memory: true
   timeout: 300
 steps:
+  - name: Install gh-aw extension
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    run: |
+      if gh extension list | grep -q "github/gh-aw"; then
+        echo "gh-aw extension already installed, upgrading..."
+        gh extension upgrade gh-aw || true
+      else
+        echo "Installing gh-aw extension..."
+        gh extension install github/gh-aw
+      fi
+      GH_AW_BIN=$(which gh-aw 2>/dev/null || find ~/.local/share/gh/extensions/gh-aw -name 'gh-aw' -type f 2>/dev/null | head -1)
+      if [ -n "$GH_AW_BIN" ] && [ -f "$GH_AW_BIN" ]; then
+        ln -sf "$GH_AW_BIN" ./gh-aw
+        echo "Created ./gh-aw symlink to $GH_AW_BIN"
+      else
+        echo "::error::Failed to find gh-aw binary"
+        exit 1
+      fi
   - name: Download logs from last 24 hours
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
