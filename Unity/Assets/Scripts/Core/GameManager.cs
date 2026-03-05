@@ -71,5 +71,15 @@ namespace TaekwondoTech.Core
         {
             _robotPartsCollected++;
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Resets singleton state for use in EditMode unit tests only.
+        /// </summary>
+        public static void ResetForTesting()
+        {
+            Instance = null;
+        }
+#endif
     }
 }

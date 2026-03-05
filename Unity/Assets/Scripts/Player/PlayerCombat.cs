@@ -48,6 +48,9 @@ namespace TaekwondoTech.Player
         /// <summary>Whether the player is currently performing an attack.</summary>
         public bool IsAttacking => _attackType != 0;
 
+        /// <summary>Whether the player can currently perform a punch (not on cooldown).</summary>
+        public bool CanAttack => _canPunch;
+
         private void Awake()
         {
             if (_rigidbody2D == null)
