@@ -72,7 +72,7 @@ namespace TaekwondoTech.Player
 
             if (_combat != null)
             {
-                _animator.SetInteger(ATTACK_TYPE, _combat.AttackType);
+                _animator.SetInteger(ATTACK_TYPE, (int)_combat.AttackType);
             }
 
             _animator.SetBool(IS_HURT, _isHurt);
