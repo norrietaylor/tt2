@@ -269,6 +269,25 @@ jobs:
         run: "mkdir -p /tmp/gh-aw\ncat > /tmp/gh-aw/jqschema.sh << 'EOF'\n#!/usr/bin/env bash\n# jqschema.sh\njq -c '\ndef walk(f):\n  . as $in |\n  if type == \"object\" then\n    reduce keys[] as $k ({}; . + {($k): ($in[$k] | walk(f))})\n  elif type == \"array\" then\n    if length == 0 then [] else [.[0] | walk(f)] end\n  else\n    type\n  end;\nwalk(.)\n'\nEOF\nchmod +x /tmp/gh-aw/jqschema.sh"
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: Install gh-aw extension
+        run: |
+          if gh extension list | grep -q "github/gh-aw"; then
+            echo "gh-aw extension already installed, upgrading..."
+            gh extension upgrade gh-aw || true
+          else
+            echo "Installing gh-aw extension..."
+            gh extension install github/gh-aw
+          fi
+          GH_AW_BIN=$(which gh-aw 2>/dev/null || find ~/.local/share/gh/extensions/gh-aw -name 'gh-aw' -type f 2>/dev/null | head -1)
+          if [ -n "$GH_AW_BIN" ] && [ -f "$GH_AW_BIN" ]; then
+            ln -sf "$GH_AW_BIN" ./gh-aw
+            echo "Created ./gh-aw symlink to $GH_AW_BIN"
+          else
+            echo "::error::Failed to find gh-aw binary"
+            exit 1
+          fi
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         name: Download logs from last 24 hours
         run: ./gh-aw logs --start-date -1d -o /tmp/gh-aw/aw-mcp/logs
 
