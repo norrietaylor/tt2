@@ -19,9 +19,18 @@ There is no CLI build system. All building and testing happens through Unity Edi
 
 **Running tests locally:** Unity Editor → Window → General → Test Runner → EditMode tab
 
-Tests use Unity Test Framework (NUnit) at `Unity/Assets/Tests/EditMode/`. The test assembly (`TT2.Tests.EditMode`) uses namespace `TaekwondoTech.Tests.EditMode` and references `UnityEngine.TestRunner` and `UnityEditor.TestRunner`.
+Tests use Unity Test Framework (NUnit) at `Unity/Assets/Tests/EditMode/`. The test assembly (`TT2.Tests.EditMode`) uses namespace `TaekwondoTech.Tests.EditMode` and references `TT2.Runtime` (production code).
 
-**CI builds** run automatically on pushes to `main` and on PRs from in-repo branches (not forks — secrets aren't exposed). Builds WebGL, iOS, Android in parallel via `game-ci/unity-builder` with `projectPath: Unity`.
+**Preflight checks (run before every push):**
+```
+./scripts/preflight.sh
+```
+This catches most CI failures locally in ~1 second: missing `.meta` files, duplicate GUIDs, 500-line violations, bad namespace imports, missing asmdef package references, and unprotected `Object.Destroy()` in EditMode tests. **Always run this before pushing.** If you encounter a new class of CI failure not caught by preflight, add a check for it to the script so future runs catch it early.
+
+**CI pipeline** runs automatically on pushes to `main` and PRs (not forks). Three jobs in order:
+1. **Preflight** (~10s) — runs `scripts/preflight.sh`
+2. **EditMode Tests** (~3-4min) — `game-ci/unity-test-runner@v4` with `-nographics`
+3. **Builds** (~4min each) — WebGL, iOS, Android in parallel via `game-ci/unity-builder`
 
 ---
 
@@ -133,10 +142,15 @@ No single C# script may exceed 500 lines. Split into multiple classes or Scripta
 
 ## Pre-Commit Checklist
 
-- [ ] All new `.cs` files are in `Unity/Assets/Scripts/<domain>/`
-- [ ] Every new `.cs` file has a `.cs.meta` with unique GUID
-- [ ] Every new folder has a `.meta` file in its parent directory
-- [ ] All scripts use correct `TaekwondoTech.*` namespace
-- [ ] No file exceeds 500 lines
-- [ ] 4-space indent, LF line endings
-- [ ] Any `IDamageable` implementation includes all required members
+1. **Run `./scripts/preflight.sh`** — must pass before pushing
+2. All new `.cs` files are in `Unity/Assets/Scripts/<domain>/`
+3. Every new `.cs` file has a `.cs.meta` with unique GUID
+4. Every new folder has a `.meta` file in its parent directory
+5. All scripts use correct `TaekwondoTech.*` namespace
+6. No file exceeds 500 lines
+7. 4-space indent, LF line endings
+8. Any `IDamageable` implementation includes all required members
+9. New `using` directives for external packages (e.g., `TMPro`) must have a matching reference in `Unity/Assets/Scripts/TT2.Runtime.asmdef`
+10. EditMode tests calling production code that uses `Object.Destroy()` must wrap the call with `LogAssert.ignoreFailingMessages = true/false`
+
+**If CI fails with a new class of error**, add a corresponding check to `scripts/preflight.sh` before fixing the code, so the same error is caught locally in future.
