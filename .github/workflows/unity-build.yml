@@ -7,7 +7,20 @@ on:
   pull_request:
 
 jobs:
+  preflight:
+    name: Preflight Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run preflight checks
+        run: ./scripts/preflight.sh
+
   test:
+    needs: preflight
     name: Run EditMode Tests
     # Skip this job for pull requests from forks because secrets are not
     # available to fork workflows and the build would fail.
@@ -23,7 +36,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
       - name: Cache Unity Library
@@ -34,6 +46,22 @@ jobs:
           restore-keys: |
             Library-test-
             Library-
+
+      - name: Cache Docker image
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.docker-cache
+          key: docker-unity-2022.3.20f1-il2cpp-3
+          restore-keys: docker-unity-
+
+      - name: Load cached Docker image
+        run: |
+          if [ -f /home/runner/.docker-cache/unity-image.tar ]; then
+            docker load -i /home/runner/.docker-cache/unity-image.tar
+            echo "Docker image loaded from cache"
+          else
+            echo "No cached image found — will pull fresh"
+          fi
 
       - name: Run EditMode tests
         id: tests
@@ -48,6 +76,16 @@ jobs:
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           customParameters: -nographics
+
+      - name: Save Docker image to cache
+        if: always()
+        run: |
+          IMAGE=$(docker images --format '{{.Repository}}:{{.Tag}}' | grep unityci | head -1)
+          if [ -n "$IMAGE" ] && [ ! -f /home/runner/.docker-cache/unity-image.tar ]; then
+            mkdir -p /home/runner/.docker-cache
+            docker save "$IMAGE" -o /home/runner/.docker-cache/unity-image.tar
+            echo "Saved $IMAGE to cache"
+          fi
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -79,7 +117,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
       - name: Cache Unity Library
