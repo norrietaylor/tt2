@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using TaekwondoTech.Core;
 using TaekwondoTech.Enemies;
 using TaekwondoTech.Enemies.States;
@@ -319,8 +320,12 @@ namespace TaekwondoTech.Tests.EditMode.Enemies
             var enemy = _stub.Enemy;
             enemy.Rigidbody.velocity = new Vector2(3f, 0f);
 
+            // DefeatedState.Enter() calls Object.Destroy() which logs an error
+            // in EditMode (Destroy requires play mode). Suppress it.
+            LogAssert.ignoreFailingMessages = true;
             var defeatedState = new DefeatedState(enemy);
             defeatedState.Enter();
+            LogAssert.ignoreFailingMessages = false;
 
             Assert.AreEqual(0f, enemy.Rigidbody.velocity.x, 0.01f,
                 "DefeatedState Enter should call StopMovement, zeroing horizontal velocity.");
@@ -335,8 +340,12 @@ namespace TaekwondoTech.Tests.EditMode.Enemies
             Assert.IsTrue(enemy.Collider.enabled,
                 "Collider should be enabled before DefeatedState Enter.");
 
+            // DefeatedState.Enter() calls Object.Destroy() which logs an error
+            // in EditMode (Destroy requires play mode). Suppress it.
+            LogAssert.ignoreFailingMessages = true;
             var defeatedState = new DefeatedState(enemy);
             defeatedState.Enter();
+            LogAssert.ignoreFailingMessages = false;
 
             Assert.IsFalse(enemy.Collider.enabled,
                 "DefeatedState Enter should disable the collider.");
