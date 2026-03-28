@@ -18,7 +18,6 @@ jobs:
 
       - name: Run preflight checks
         run: ./scripts/preflight.sh
-
   test:
     needs: preflight
     name: Run EditMode Tests
@@ -36,6 +35,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           lfs: true
 
       - name: Cache Unity Library
