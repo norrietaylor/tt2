@@ -1,7 +1,9 @@
 {
     "name": "TT2.Runtime",
     "rootNamespace": "TaekwondoTech",
-    "references": [],
+    "references": [
+        "Unity.TextMeshPro"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
