@@ -1,0 +1,15 @@
+Type: file
+Description: PlaceholderTest.cs and PlaceholderTest.cs.meta are removed from Tests/EditMode
+Command: ls Unity/Assets/Tests/EditMode/
+Expected: Directory should NOT contain PlaceholderTest.cs or PlaceholderTest.cs.meta
+Timestamp: 2026-03-27T00:00:00Z
+
+--- Output ---
+Directory listing of Unity/Assets/Tests/EditMode/:
+  TT2.Tests.EditMode.asmdef
+  TT2.Tests.EditMode.asmdef.meta
+
+PlaceholderTest.cs: NOT PRESENT
+PlaceholderTest.cs.meta: NOT PRESENT
+
+Status: PASS

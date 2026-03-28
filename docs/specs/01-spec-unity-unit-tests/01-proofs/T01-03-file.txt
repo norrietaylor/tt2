@@ -1,0 +1,30 @@
+Type: file
+Description: unity-build.yml has game-ci/unity-test-runner@v4 job with editmode tests and artifact upload
+Command: grep -n "unity-test-runner|testMode|upload-artifact|test-results" .github/workflows/unity-build.yml
+Expected: test job with unity-test-runner@v4, testMode: editmode, artifact upload step
+Timestamp: 2026-03-27T00:00:00Z
+
+--- Output ---
+Relevant lines from .github/workflows/unity-build.yml:
+  Line 10:  test:
+  Line 11:    name: Run EditMode Tests
+  Line 37:    - name: Run EditMode tests
+  Line 38:        uses: game-ci/unity-test-runner@v4
+  Line 44:          testMode: editmode
+  Line 45:          artifactsPath: test-results
+  Line 48:    - name: Upload test results
+  Line 49:        uses: actions/upload-artifact@v4
+  Line 51:          if: always()
+  Line 52:          name: test-results-editmode
+  Line 53:          path: test-results
+
+Fork-skip condition present:
+  Line 14-17: if condition matches build job fork-skip pattern
+
+Secrets used:
+  UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD (same as build job)
+
+Cache configuration:
+  Library-test-* cache key (same restore-keys as build job)
+
+Status: PASS

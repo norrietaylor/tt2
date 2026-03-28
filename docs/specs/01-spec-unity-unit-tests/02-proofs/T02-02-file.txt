@@ -1,0 +1,32 @@
+Type: file
+Description: Verify all required test methods exist in EnemyStateMachineTests.cs covering all 8 scenarios
+Command: grep -n '\[Test\]' Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs
+Expected: 9 [Test] attributes (8 scenario tests + 1 for ChangeState to null sets state to null)
+Timestamp: 2026-03-27T00:00:00Z
+
+--- OUTPUT ---
+50:        [Test]
+57:        [Test]
+65:        [Test]
+74:        [Test]
+83:        [Test]
+96:        [Test]
+106:        [Test]
+113:        [Test]
+122:        [Test]
+132:        [Test]
+
+Test methods found:
+  - CurrentState_WhenNewlyInstantiated_IsNull
+  - ChangeState_WithNewState_SetsCurrentState
+  - ChangeState_WithNewState_CallsEnterOnNewState
+  - ChangeState_WithPreviousState_CallsExitOnPreviousState
+  - ChangeState_OnTransition_CallsExitBeforeEnter
+  - Update_WithActiveState_CallsExecuteOnCurrentState
+  - Update_WithNullState_DoesNotThrow
+  - ChangeState_ToNull_CallsExitOnPreviousState
+  - ChangeState_ToNull_SetsCurrentStateToNull
+
+MockEnemyState class tracks: EnterCallCount, ExecuteCallCount, ExitCallCount, EnterCallOrder, ExitCallOrder
+
+Status: PASS

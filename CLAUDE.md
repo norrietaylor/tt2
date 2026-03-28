@@ -1,58 +1,63 @@
-# CLAUDE.md — Taekwondo Tech v2
+# CLAUDE.md
 
-This file provides essential context for AI agents (Claude, Copilot, etc.) working on this repository. **Read this before making any changes.**
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
 
 ## Project Overview
 
-**Taekwondo Tech v2** is a Unity 2022 LTS side-scrolling platformer (C#) targeting WebGL, iOS, and Android. The game features a taekwondo martial artist collecting robot parts, combat mechanics, costumes, and power-ups.
+**Taekwondo Tech v2** is a Unity 2022.3.20f1 (LTS) side-scrolling platformer (C#) targeting WebGL, iOS, and Android. The game features a taekwondo martial artist collecting robot parts, combat mechanics, costumes, and power-ups.
+
+- Unity project root: `Unity/` (not repo root)
+- Product requirements: `docs/prd.md` (REQ-001 through REQ-012)
 
 ---
 
-## Repository Structure
+## Build & Test Commands
 
-```
-tt2/
-├── CLAUDE.md          ← You are here
-├── CONTRIBUTING.md    ← Coding standards, PR guidelines, CI/CD info
-├── Unity/             ← THE UNITY PROJECT (all game code goes here)
-│   ├── Assets/
-│   │   ├── Scripts/   ← ALL C# scripts go here, organized by domain
-│   │   │   ├── Core/         (GameManager, SceneLoader, Interfaces)
-│   │   │   ├── Player/       (PlayerController, PlayerCombat, PlayerHealth)
-│   │   │   ├── Enemies/      (EnemyBase, EnemyStateMachine, states)
-│   │   │   ├── Collectibles/ (Coin, RobotPart, Collectible base)
-│   │   │   ├── UI/           (HUDController)
-│   │   │   ├── Levels/       (LevelManager, CameraFollower, ParallaxBackground)
-│   │   │   ├── Persistence/  (SaveSystem, PlayerPrefsHelper)
-│   │   │   ├── Costumes/
-│   │   │   ├── PowerUps/
-│   │   │   └── Input/
-│   │   ├── Prefabs/
-│   │   ├── Scenes/
-│   │   ├── Art/
-│   │   ├── Audio/
-│   │   └── ScriptableObjects/
-│   ├── Packages/
-│   └── ProjectSettings/
-└── docs/
-    └── prd.md         ← Product requirements document
-```
+There is no CLI build system. All building and testing happens through Unity Editor or CI.
 
-**CRITICAL**: All C# scripts must be placed inside `Unity/Assets/Scripts/<domain>/`. Never place scripts outside the `Unity/` directory.
+**Running tests locally:** Unity Editor → Window → General → Test Runner → EditMode tab
+
+Tests use Unity Test Framework (NUnit) at `Unity/Assets/Tests/EditMode/`. The test assembly (`TT2.Tests.EditMode`) uses namespace `TaekwondoTech.Tests.EditMode` and references `UnityEngine.TestRunner` and `UnityEditor.TestRunner`.
+
+**CI builds** run automatically on pushes to `main` and on PRs from in-repo branches (not forks — secrets aren't exposed). Builds WebGL, iOS, Android in parallel via `game-ci/unity-builder` with `projectPath: Unity`.
 
 ---
 
-## Unity `.meta` Files — REQUIRED for Every New Asset
+## Architecture
 
-Unity requires a `.meta` file alongside **every** file and folder you create. Without `.meta` files, Unity cannot track assets by GUID, causing build failures and broken scene references.
+### Key Patterns
 
-### When you create a new C# script file:
+1. **Singleton managers** — `GameManager`, `InputManager`, `ScoreManager` use `DontDestroyOnLoad()` with duplicate-prevention in `Awake()`. Access globally via static `Instance` property.
 
-**Create `Unity/Assets/Scripts/<Domain>/MyNewScript.cs` AND `Unity/Assets/Scripts/<Domain>/MyNewScript.cs.meta`**
+2. **Interface-driven design** — Core interfaces in `Unity/Assets/Scripts/Core/Interfaces.cs`:
+   - `IDamageable` — Health/damage system (Player, Enemies). Properties: `Health`, `MaxHealth`, `IsAlive`. Methods: `TakeDamage(float)`, `TakeDamage(float, GameObject)`, `Heal(float)`.
+   - `ICollectible` — Pickup items. `OnCollect(GameObject)`, `CollectibleType`, `Rarity`.
+   - `IInteractable` — Interactive objects. `Interact(GameObject)`, `CanInteract`, `InteractionPrompt`.
+   - `IPowerUp` — Power-ups. `Activate(GameObject)`, `Deactivate(GameObject)`, `PowerUpType`, `Duration`, `IsActive`.
 
-Template for a C# script `.meta` file:
+3. **State machine** — Enemy AI uses `EnemyStateMachine` with `IEnemyState` interface (Enter/Execute/Exit). States: Idle, Patrol, Chase, Attack, Stunned, Defeated (in `Enemies/States/`).
+
+4. **UnityEvent communication** — Loose coupling via events like `OnHealthChanged`, `OnPlayerDeath`, `OnEnemyDefeated`, `OnPlayerDamaged`.
+
+### Player decomposition
+
+Player logic is split across: `PlayerController` (movement/jumping), `PlayerCombat` (attacks), `PlayerHealth` (3-hit HP, invincibility frames), `PlayerAnimator` (animation states). This is the pattern to follow when adding complex entities.
+
+---
+
+## Mandatory Rules
+
+### All C# scripts go in `Unity/Assets/Scripts/<domain>/`
+
+Never place scripts outside the `Unity/` directory.
+
+### Unity `.meta` files for every new asset
+
+Every new file and folder needs a `.meta` file with a unique 32-char lowercase hex GUID. Without them, Unity can't track assets — builds break.
+
+**C# script `.meta` template:**
 ```yaml
 fileFormatVersion: 2
 guid: <unique-32-hex-char-guid>
@@ -67,11 +72,7 @@ MonoImporter:
   assetBundleVariant:
 ```
 
-### When you create a new folder:
-
-**Create `Unity/Assets/Scripts/NewFolder/` AND `Unity/Assets/Scripts/NewFolder.meta`** (the meta file lives next to the folder, not inside it)
-
-Template for a folder `.meta` file:
+**Folder `.meta` template** (lives next to the folder, not inside it):
 ```yaml
 fileFormatVersion: 2
 guid: <unique-32-hex-char-guid>
@@ -83,21 +84,9 @@ DefaultImporter:
   assetBundleVariant:
 ```
 
-### Generating GUIDs
+Never reuse a GUID that already appears in another `.meta` file.
 
-Each `.meta` file needs a unique 32-character lowercase hex GUID. You can derive one deterministically from the file path. Example:
-- `Core/GameManager.cs` → `guid: c0a0e1d2f3b4a5c6d7e8f9a0b1c2d3e4`
-- `Enemies/EnemyBase.cs` → `guid: e0e1b2a3f4c5d6e7f8a9b0c1d2e3f4a5`
-
-**Never reuse a GUID** that already appears in another `.meta` file in the project.
-
----
-
-## Coding Standards
-
-### Namespaces (MANDATORY)
-
-All scripts must use the `TaekwondoTech` namespace or a child namespace:
+### Namespaces (mandatory)
 
 | Directory | Namespace |
 |---|---|
@@ -112,73 +101,42 @@ All scripts must use the `TaekwondoTech` namespace or a child namespace:
 | `Costumes/` | `TaekwondoTech.Costumes` |
 | `PowerUps/` | `TaekwondoTech.PowerUps` |
 
-### 500-Line Cap (MANDATORY — CI Enforced)
+### 500-line cap (CI enforced)
 
-**No single C# script may exceed 500 lines.** If a script approaches this limit, split responsibilities into multiple classes or use ScriptableObjects.
+No single C# script may exceed 500 lines. Split into multiple classes or ScriptableObjects.
 
 ### Formatting
 
-- **4 spaces** per indent level (no tabs)
-- UTF-8 encoding, **LF** line endings
+- 4 spaces (no tabs), UTF-8, LF line endings, no trailing whitespace
 - One blank line between methods
-- No trailing whitespace
 
-### Naming Conventions
+### Naming conventions
 
 | Element | Convention | Example |
 |---|---|---|
 | Classes / Structs / Enums | PascalCase | `GameManager`, `EnemyType` |
-| Methods | PascalCase | `LoadScene()`, `TakeDamage()` |
+| Methods | PascalCase | `LoadScene()` |
 | Public Properties | PascalCase | `Health`, `IsAlive` |
-| Private/protected fields | camelCase with `_` prefix | `_health`, `_isGrounded` |
-| Constants | UPPER_SNAKE_CASE | `MAX_HEALTH`, `JUMP_FORCE` |
-| Interfaces | `I` + PascalCase | `IDamageable`, `ICollectible` |
-| Unity Events | PascalCase | `OnPlayerDeath` |
+| Private/protected fields | `_` prefix camelCase | `_health`, `_isGrounded` |
+| Constants | UPPER_SNAKE_CASE | `MAX_HEALTH` |
+| Interfaces | `I` + PascalCase | `IDamageable` |
 
 ---
 
-## Key Interfaces (in `TaekwondoTech.Core`)
+## Branch & PR Conventions
 
-These are defined in `Unity/Assets/Scripts/Core/Interfaces.cs`:
-
-- **`IDamageable`** — Entities that take damage (Player, Enemies). Has `Health`, `MaxHealth`, `IsAlive`, `TakeDamage(float)`, `TakeDamage(float, GameObject)`, `Heal(float)`.
-- **`ICollectible`** — Items the player can pick up. Has `OnCollect(GameObject)`, `CollectibleType`, `Rarity`.
-- **`IInteractable`** — Objects the player can interact with. Has `Interact(GameObject)`, `CanInteract`, `InteractionPrompt`.
-- **`IPowerUp`** — Power-up items. Has `PowerUpType`, `Duration`, `Activate(GameObject)`, `Deactivate(GameObject)`, `IsActive`.
-
-When adding new damageable entities, implement `IDamageable` from `TaekwondoTech.Core`.
+- Branch naming: `feature/<desc>`, `fix/<desc>`, `chore/<desc>`
+- PR titles: imperative mood — "Add X" not "Added X"
+- One approving review required before merge
 
 ---
 
-## CI/CD Pipeline
+## Pre-Commit Checklist
 
-The Unity build workflow (`.github/workflows/unity-build.yml`) builds for **WebGL**, **iOS**, and **Android** on every PR. It requires:
-- `UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD` secrets (already configured)
-- Unity project located at `Unity/` (i.e., `projectPath: Unity`)
-
-**Builds will fail if:**
-- C# scripts have compilation errors
-- A script exceeds 500 lines
-- New assets are missing `.meta` files (Unity cannot track them by GUID)
-- Scripts use wrong or missing namespaces
-
----
-
-## Checklist for Agent-Written PRs
-
-Before committing any code changes, verify:
-
-- [ ] All new C# scripts are in `Unity/Assets/Scripts/<domain>/`
-- [ ] Every new `.cs` file has a corresponding `.cs.meta` file with a unique GUID
-- [ ] Every new folder has a corresponding `.meta` file (in the parent directory)
-- [ ] All scripts use the correct `TaekwondoTech.*` namespace
-- [ ] No new file exceeds 500 lines
-- [ ] 4-space indentation, LF line endings
-- [ ] New classes follow the naming conventions above
-- [ ] Any new `IDamageable` implementation includes all required interface members
-
----
-
-## Product Requirements
-
-See `docs/prd.md` for the full product requirements document, including the game's functional requirements (REQ-001 through REQ-012), user stories, and implementation roadmap.
+- [ ] All new `.cs` files are in `Unity/Assets/Scripts/<domain>/`
+- [ ] Every new `.cs` file has a `.cs.meta` with unique GUID
+- [ ] Every new folder has a `.meta` file in its parent directory
+- [ ] All scripts use correct `TaekwondoTech.*` namespace
+- [ ] No file exceeds 500 lines
+- [ ] 4-space indent, LF line endings
+- [ ] Any `IDamageable` implementation includes all required members

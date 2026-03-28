@@ -1,1 +1,5 @@
-.github/workflows/*.lock.yml linguist-generated=true merge=ours
+# Treat common dependency lockfiles as generated so they don't clutter diffs or language stats
+package-lock.json linguist-generated=true
+yarn.lock linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+Gemfile.lock linguist-generated=true

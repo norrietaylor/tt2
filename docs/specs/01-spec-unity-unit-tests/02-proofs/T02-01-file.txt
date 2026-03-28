@@ -1,0 +1,11 @@
+Type: file
+Description: EnemyStateMachineTests.cs exists with [TestFixture] attribute
+Command: ls -la Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs && grep -n '\[TestFixture\]' Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs
+Expected: File exists and contains [TestFixture] attribute
+Timestamp: 2026-03-27T00:00:00Z
+
+--- OUTPUT ---
+-rw-r--r-- 1 norrie.guest norrie.guest 4180 2026-03-27 Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs
+47:    [TestFixture]
+
+Status: PASS
