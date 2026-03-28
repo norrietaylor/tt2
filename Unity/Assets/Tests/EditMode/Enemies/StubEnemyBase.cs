@@ -85,9 +85,18 @@ namespace TaekwondoTech.Tests.EditMode.Enemies
 
             so.ApplyModifiedPropertiesWithoutUndo();
 
-            // Re-initialize health to reflect the new _maxHealth
-            // (Awake already ran with default _maxHealth before our SerializedObject changes)
+            // In batch mode, Awake() may not fire or may run before components
+            // are fully registered. Ensure all private runtime fields are set
+            // via reflection so tests work regardless of Awake() timing.
             SetPrivateField(_enemy, "_currentHealth", maxHealth);
+            SetPrivateField(_enemy, "_rigidbody", _enemyObject.GetComponent<Rigidbody2D>());
+            SetPrivateField(_enemy, "_collider", _enemyObject.GetComponent<Collider2D>());
+
+            // Ensure the state machine exists
+            if (_enemy.StateMachine == null)
+            {
+                SetPrivateField(_enemy, "_stateMachine", new EnemyStateMachine());
+            }
         }
 
         /// <summary>
