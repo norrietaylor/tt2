@@ -1,0 +1,25 @@
+Type: file
+Description: Verify StubEnemyBase.cs exists with correct namespace and structure
+Command: stat + grep checks on StubEnemyBase.cs
+Expected: File exists, uses TaekwondoTech.Tests.EditMode.Enemies namespace, has .meta
+Timestamp: 2026-03-27T19:45:00Z
+
+--- Verification ---
+
+File: Unity/Assets/Tests/EditMode/Enemies/StubEnemyBase.cs
+Exists: YES
+Lines: 144 (under 500 limit)
+Namespace: TaekwondoTech.Tests.EditMode.Enemies (CORRECT)
+Meta file: Unity/Assets/Tests/EditMode/Enemies/StubEnemyBase.cs.meta (EXISTS)
+GUID: b97df26353514fd1b02c72119936f3d8 (UNIQUE)
+Indent: 4 spaces (CORRECT)
+Line endings: LF (CORRECT)
+
+Key features:
+- Creates EnemyBase via AddComponent on a test GameObject
+- Uses SerializedObject to set private [SerializeField] fields
+- Provides SetPlayerDistance() for positioning tests
+- Provides SetStateTimer() for reflection-based timer manipulation
+- Provides Destroy() for cleanup in TearDown
+
+Status: PASS

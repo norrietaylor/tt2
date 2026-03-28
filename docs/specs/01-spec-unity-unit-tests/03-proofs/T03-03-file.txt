@@ -1,0 +1,57 @@
+Type: file
+Description: Verify feature scenario coverage - all 16 scenarios from .feature file are tested
+Command: Cross-reference feature file scenarios with test methods
+Expected: Every scenario in enemy-state-tests-with-stub-enemy-base.feature has a corresponding test
+Timestamp: 2026-03-27T19:45:00Z
+
+--- Feature Scenario to Test Method Mapping ---
+
+Feature file: docs/specs/01-spec-unity-unit-tests/enemy-state-tests-with-stub-enemy-base.feature
+
+IdleState:
+  "IdleState calls StopMovement on Enter"
+    -> IdleState_Enter_CallsStopMovement [COVERED]
+  "IdleState transitions to PatrolState after idle duration expires"
+    -> IdleState_TransitionsToPatrol_AfterIdleDuration [COVERED]
+  "IdleState transitions to ChaseState when player is within detection radius"
+    -> IdleState_TransitionsToChase_WhenPlayerWithinDetectionRadius [COVERED]
+
+PatrolState:
+  "PatrolState transitions to ChaseState when player is within detection radius"
+    -> PatrolState_TransitionsToChase_WhenPlayerWithinDetectionRadius [COVERED]
+  "PatrolState moves toward waypoints during Execute"
+    -> PatrolState_MovesTowardWaypoint_DuringExecute [COVERED]
+
+ChaseState:
+  "ChaseState shows alert indicator on Enter"
+    -> ChaseState_Enter_ShowsAlertIndicator [COVERED]
+  "ChaseState transitions to AttackState when player is within attack range"
+    -> ChaseState_TransitionsToAttack_WhenPlayerWithinAttackRange [COVERED]
+  "ChaseState transitions to PatrolState when player exceeds hysteresis distance"
+    -> ChaseState_TransitionsToPatrol_WhenPlayerExceedsHysteresisDistance [COVERED]
+  "ChaseState hides alert indicator on Exit"
+    -> ChaseState_Exit_HidesAlertIndicator [COVERED]
+
+AttackState:
+  "AttackState calls StopMovement on Enter"
+    -> AttackState_Enter_CallsStopMovement [COVERED]
+  "AttackState transitions to ChaseState after attack duration"
+    -> AttackState_TransitionsToChase_AfterAttackDuration [COVERED]
+  "AttackState deals damage exactly once at midpoint of attack"
+    -> AttackState_DealsDamageExactlyOnce_AtMidpoint [COVERED]
+
+StunnedState:
+  "StunnedState calls StopMovement on Enter"
+    -> StunnedState_Enter_CallsStopMovement [COVERED]
+  "StunnedState transitions to ChaseState after stun duration"
+    -> StunnedState_TransitionsToChase_AfterStunDuration [COVERED]
+
+DefeatedState:
+  "DefeatedState calls StopMovement on Enter"
+    -> DefeatedState_Enter_CallsStopMovement [COVERED]
+  "DefeatedState disables collider on Enter"
+    -> DefeatedState_Enter_DisablesCollider [COVERED]
+
+Coverage: 16/16 scenarios covered (100%)
+
+Status: PASS

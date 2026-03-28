@@ -1,0 +1,50 @@
+Type: file
+Description: Verify EnemyStateTests.cs exists with all 16 required test methods
+Command: stat + grep checks on EnemyStateTests.cs
+Expected: File exists, contains tests for all 6 states, uses correct namespace, has .meta
+Timestamp: 2026-03-27T19:45:00Z
+
+--- Verification ---
+
+File: Unity/Assets/Tests/EditMode/Enemies/EnemyStateTests.cs
+Exists: YES
+Lines: 345 (under 500 limit)
+Namespace: TaekwondoTech.Tests.EditMode.Enemies (CORRECT)
+Meta file: Unity/Assets/Tests/EditMode/Enemies/EnemyStateTests.cs.meta (EXISTS)
+GUID: c551966acfd448c9b7f56f01f0c9afef (UNIQUE)
+Indent: 4 spaces (CORRECT)
+Line endings: LF (CORRECT)
+
+Test methods (16 total, covering all 6 states):
+
+IdleState (3 tests):
+  [PASS] IdleState_Enter_CallsStopMovement
+  [PASS] IdleState_TransitionsToPatrol_AfterIdleDuration
+  [PASS] IdleState_TransitionsToChase_WhenPlayerWithinDetectionRadius
+
+PatrolState (2 tests):
+  [PASS] PatrolState_TransitionsToChase_WhenPlayerWithinDetectionRadius
+  [PASS] PatrolState_MovesTowardWaypoint_DuringExecute
+
+ChaseState (4 tests):
+  [PASS] ChaseState_Enter_ShowsAlertIndicator
+  [PASS] ChaseState_TransitionsToAttack_WhenPlayerWithinAttackRange
+  [PASS] ChaseState_TransitionsToPatrol_WhenPlayerExceedsHysteresisDistance
+  [PASS] ChaseState_Exit_HidesAlertIndicator
+
+AttackState (3 tests):
+  [PASS] AttackState_Enter_CallsStopMovement
+  [PASS] AttackState_TransitionsToChase_AfterAttackDuration
+  [PASS] AttackState_DealsDamageExactlyOnce_AtMidpoint
+
+StunnedState (2 tests):
+  [PASS] StunnedState_Enter_CallsStopMovement
+  [PASS] StunnedState_TransitionsToChase_AfterStunDuration
+
+DefeatedState (2 tests):
+  [PASS] DefeatedState_Enter_CallsStopMovement
+  [PASS] DefeatedState_Enter_DisablesCollider
+
+Helper class included: StubDamageable (implements IDamageable for attack damage tests)
+
+Status: PASS
