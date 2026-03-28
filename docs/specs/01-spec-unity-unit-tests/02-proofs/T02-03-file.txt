@@ -1,0 +1,16 @@
+Type: file
+Description: Verify folder .meta and all .meta files exist for created assets
+Command: ls -la Unity/Assets/Tests/EditMode/Enemies.meta Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs.meta
+Expected: Both .meta files exist with unique GUIDs
+Timestamp: 2026-03-27T00:00:00Z
+
+--- OUTPUT ---
+-rw-rw-r-- 1 norrie norrie 171 Mar 27 19:33 Unity/Assets/Tests/EditMode/Enemies.meta
+-rw-rw-r-- 1 norrie norrie 222 Mar 27 19:33 Unity/Assets/Tests/EditMode/Enemies/EnemyStateMachineTests.cs.meta
+
+Enemies.meta GUID: 8d454c7710d248da9951c720b929b729
+EnemyStateMachineTests.cs.meta GUID: 3d5aa69278c74e1387d65e9fe349d877
+
+Both GUIDs are unique 32-char lowercase hex strings not present in any other .meta file.
+
+Status: PASS
