@@ -41,8 +41,14 @@ namespace TaekwondoTech.Tests.EditMode.Enemies
             bool createWaypoints = true,
             bool createAlertIndicator = true)
         {
-            // Create the enemy GameObject. AddComponent triggers Awake().
+            // Create the enemy GameObject with required components first.
+            // EnemyBase has [RequireComponent(typeof(Rigidbody2D))] and
+            // [RequireComponent(typeof(Collider2D))]. In batch mode Unity
+            // cannot auto-add the abstract Collider2D, so we add a concrete
+            // BoxCollider2D and Rigidbody2D before EnemyBase.
             _enemyObject = new GameObject("TestEnemy");
+            _enemyObject.AddComponent<Rigidbody2D>();
+            _enemyObject.AddComponent<BoxCollider2D>();
             _enemy = _enemyObject.AddComponent<EnemyBase>();
 
             // Use SerializedObject to set private [SerializeField] fields
