@@ -19,8 +19,7 @@ namespace TaekwondoTech.Levels
 
         public static LevelManager Instance { get; private set; }
 
-        [Header("Level Configuration")]
-        [SerializeField] private string _currentLevelName;
+        private string _currentLevelName;
 
         private LevelState _currentState = LevelState.Playing;
 
