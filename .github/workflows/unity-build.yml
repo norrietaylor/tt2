@@ -53,6 +53,7 @@ jobs:
           path: test-results
 
   build:
+    needs: test
     name: Build for ${{ matrix.targetPlatform }}
     # Skip this job for pull requests from forks because secrets are not
     # available to fork workflows and the build would fail.
