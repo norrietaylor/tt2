@@ -1,3 +1,12 @@
+Type: file
+Description: TT2.Tests.EditMode.asmdef contains Assembly-CSharp reference
+Command: grep -c "Assembly-CSharp" Unity/Assets/Tests/EditMode/TT2.Tests.EditMode.asmdef
+Expected: 1 (one occurrence of Assembly-CSharp in references array)
+Timestamp: 2026-03-27T00:00:00Z
+
+--- Output ---
+File: Unity/Assets/Tests/EditMode/TT2.Tests.EditMode.asmdef
+Contents:
 {
     "name": "TT2.Tests.EditMode",
     "rootNamespace": "TaekwondoTech.Tests.EditMode",
@@ -20,3 +29,7 @@
     "versionDefines": [],
     "noEngineReferences": false
 }
+
+Assembly-CSharp occurrence count: 1
+
+Status: PASS
